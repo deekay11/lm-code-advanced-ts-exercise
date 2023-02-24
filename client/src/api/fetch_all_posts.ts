@@ -1,4 +1,4 @@
-import { baseUrl } from "./base_url.mjs";
+import { baseUrl } from "./base_url";
 
 export async function fetchAllPosts() {
 	try {
