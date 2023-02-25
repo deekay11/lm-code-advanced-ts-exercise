@@ -7,7 +7,7 @@ import { User } from "../../../../../server/src/types/posts.types";
 export async function addUsers() {
     clear("yes");
 
-    const name = await prompt("Enter Username of New User! ");
+    const name = await prompt("Enter Name of New User! ");
     const users = getAllUsers();
     const id = String(parseInt(users[users.length - 1].id) + 1); // generate new ID by incrementing the ID of the last user in the list
     const creationDate = new Date();
@@ -31,4 +31,3 @@ export async function addUsers() {
 
     return states.MENU;
 }
-

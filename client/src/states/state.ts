@@ -10,4 +10,4 @@ export class State {
 	set(newState: string) {
 		this.state = newState;
 	}
-}
+}	

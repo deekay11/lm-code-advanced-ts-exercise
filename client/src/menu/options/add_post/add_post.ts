@@ -7,12 +7,10 @@ import { User } from "../../../../../server/src/types/posts.types";
 
 export async function addPost() {
     clear("yes");
-
     let id: string;
     function validateNumberInput(input: string): boolean {
         return /^[0-9]+$/.test(input);
     }
-
     do {
         clear("yes");
         id = await prompt("Enter ID of New Post (numbers only) : "); //user only enter ID as number
@@ -39,11 +37,8 @@ export async function addPost() {
             break;
         }
     }
-
-
     printNewLine();
     print(`📨 Adding Post "${title}" with Post ID "${id}" and Author "${author.name}"...`);
-
     const success = await addNewPost(id, title, text, author);
 
     if (success === true) print("🥳 Post Added successfully!");

@@ -1,3 +1,5 @@
+// main.ts
+
 import { exit } from "./exit/exit";
 import { showMenu } from "./menu/menu";
 import { browsePosts } from "./menu/options/browse_posts/browse_posts";
@@ -18,70 +20,36 @@ async function begin() {
 }
 
 async function main() {
-	let state = new State();
+	const stateFunctions = {
+		[states.MENU]: showMenu,
+		[states.SEND_MESSAGE]: sendMessage,
+		[states.SHOW_POSTS]: showAllPosts,
+		[states.SHOW_USERS]: showAllUsers,
+		[states.BROWSE_POSTS]: browsePosts,
+		[states.ADD_USER]: addUsers,
+		[states.ADD_POST]: addPost,
+		[states.UNKNOWN]: async () => {
+			clear("no");
+			print("😵 We have entered an unknown state.");
+			await prompt("⌨️ Press [ENTER] to return to the main menu! 🕶️");
+			return states.MENU;
+		},
+	};
+
+	let currentState = states.MENU;
 
 	while (true) {
-		switch (state.get()) {
-			case "MENU":
-				const newMenuOption = await showMenu();
-				state.set(newMenuOption);
-				break;
-			case "SEND_MESSAGE":
-				const nextState = await sendMessage();
-				state.set(nextState);
-				break;
-			case "SHOW_POSTS":
-				clear("no");
-				const posts = await showAllPosts();
-				state.set(states.MENU);
-				break;
-			case "SHOW_USERS":
-				clear("no");
-				const users = await showAllUsers();
-				state.set(states.MENU);
-				break;
-			case "BROWSE_POSTS":
-				clear("no");
-				const post = await browsePosts();
-				state.set(states.MENU);
-				break;
-			case "ADD_USER":
-				clear("no");
-				const user = await addUsers();
-				state.set(states.MENU);
-				break;
-			case "ADD_POST":
-				clear("no");
-				const addpost = await addPost();
-				state.set(states.MENU);
-				break;
-			case "UNKNOWN":
-				clear("no");
-				console.log(`Entered UNKNOWN state with current state: ${state.get()}`);
-				print("😵 We have entered an unknown state.");
-				await prompt("⌨️ Press [ENTER] to return to the main menu! 🕶️");
-				state.set(states.MENU);
-				break;
-			case "CABBAGE":
-				clear("no");
-				print("🥬🥬🥬🥬🥬🥬🥬🥬🥬🥬🥬🥬🥬🥬🥬🥬🥬🥬", false);
-				print("🥬      CABBAGE MODE UNLOCKED     🥬", false);
-				print("🥬     Why did you want this?     🥬", false);
-				print("🥬🥬🥬🥬🥬🥬🥬🥬🥬🥬🥬🥬🥬🥬🥬🥬🥬🥬", false);
-				await prompt("⌨️ Press [ENTER] to return to the main menu! 🕶️");
-				state.set(states.MENU);
-				break;
-			default:
-				clear("no");
-				print(`🌋 😱 Uh-oh, we've entered an invalid state: "${state.get()}"`);
-				print("💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥", false);
-				print("💥 Crashing the program now...  💥", false);
-				print("💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥", false);
-				printNewLine();
-				exit(99);
-				break;
+		const nextState = await stateFunctions[currentState]();
+		if (!Object.values(states).includes(nextState)) {
+			currentState = states.UNKNOWN;
+		} else {
+			currentState = nextState;
 		}
 
+		if (currentState === states.EXIT) {
+			exit(0);
+		}
 	}
 }
+
 begin();
