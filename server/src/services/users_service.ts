@@ -27,7 +27,11 @@ export function getAllUsers(): User[] {
 	return users;
 }
 
-export function addUser(user: User): boolean {
+export function addUser(user: User): User[] {
 	users.push(user);
-	return true;
+	return users;
 }
+export function getUserById(id: string, users: User[]): User | undefined {
+	return users.find((user) => user.id === id);
+}
+

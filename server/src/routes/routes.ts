@@ -1,7 +1,7 @@
 import * as express from "express";
 import { Express } from "express";
-import { getAllPosts } from "../services/posts_service";
-import { getAllUsers, addUser } from "../services/users_service";
+import { getAllPost, addPost } from "../services/posts_service";
+import { getAllUsers, addUser, getUserById } from "../services/users_service";
 import { User } from "../types/posts.types";
 
 /*
@@ -68,20 +68,50 @@ function addAPIRoutes(app: Express) {
 	// now we'll add some routes that let us browse some blog posts
 	console.log("✍️  Adding blog post routes...");
 	apiRouter.get("/posts/all", (req, res) => {
-		res.status(200).send(JSON.stringify(getAllPosts()));
+		res.status(200).send(JSON.stringify(getAllPost()));
 	});
 
 	apiRouter.get("/posts/:id", (req, res) => {
-		const post = getAllPosts().find((p) => p.id === req.params.id);
+		const post = getAllPost().find((p) => p.id === req.params.id);
 		if (post !== undefined)
 			res.status(200).send(JSON.stringify({ postFound: true, ...post }));
 		else res.status(200).send(JSON.stringify({ postFound: false }));
 	});
 
+
+
 	console.log("✍️  Adding user routes...");
 	apiRouter.get("/users/all", (req, res) => {
 		res.status(200).send(JSON.stringify(getAllUsers()));
 	});
+
+
+	let lastPostId = getAllPost().length;
+	apiRouter.post("/posts/add/", (req, res) => {
+		const { id, title, text, authorId } = req.body;
+
+		console.log(`👋 Post added "${title}"`);
+
+		const author = getUserById(authorId, getAllUsers());
+
+		if (!author) {
+			console.error(`❌ Invalid author ID "${authorId}"`);
+			res.status(400).send({ success: false, error: `Invalid author ID "${authorId}"` });
+			return;
+		}
+
+		const newPost = {
+			id,
+			title,
+			text,
+			author,
+		};
+
+		addPost(newPost);
+
+		res.status(200).send({ success: true });
+	});
+
 
 	// Add user
 	let lastUserId = getAllUsers().length;
