@@ -1,5 +1,3 @@
-// main.ts
-
 import { exit } from "./exit/exit";
 import { showMenu } from "./menu/menu";
 import { browsePosts } from "./menu/options/browse_posts/browse_posts";
@@ -11,13 +9,6 @@ import { addPost } from "./menu/options/add_post/add_post";
 import { State } from "./states/state";
 import { states } from "./states/states";
 import { clear, print, printNewLine, prompt } from "./ui/console";
-
-async function begin() {
-	clear("yes");
-	print("👋 Welcome to our cool blog browser!");
-	await prompt("⌨️ Press [ENTER] to continue! 🕶️");
-	main();
-}
 
 async function main() {
 	const stateFunctions = {
@@ -51,5 +42,4 @@ async function main() {
 		}
 	}
 }
-
-begin();
+main();
