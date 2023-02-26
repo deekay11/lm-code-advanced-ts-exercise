@@ -6,9 +6,8 @@ import { showAllPosts } from "./menu/options/show_all_posts/show_all_posts";
 import { showAllUsers } from "./menu/options/show_all_users/show_all_users";
 import { addUsers } from "./menu/options/add_user/add_user";
 import { addPost } from "./menu/options/add_post/add_post";
-import { State } from "./states/state";
 import { states } from "./states/states";
-import { clear, print, printNewLine, prompt } from "./ui/console";
+import { clear, print, prompt } from "./ui/console";
 
 async function main() {
 	const stateFunctions = {
