@@ -65,7 +65,6 @@ async function main() {
 		} else {
 			currentState = nextState;
 		}
-
 		if (currentState === states.EXIT) {
 			exit(0);
 		}
